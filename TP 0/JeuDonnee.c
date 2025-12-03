@@ -143,43 +143,6 @@ int main() {
    fclose(f2);
    printf(" Test-2.txt cree \n");
 
-    // -------------------------------------------------------------
-    // 5. Test-3 : 3, 6, 9, 12 chiffres
-    // -------------------------------------------------------------
-    printf("-----------------------------------------------------------\n");
-    printf(" 5. Test-3 : nombres à 3, 6, 9 chiffres\n");
-
-    FILE *f3 = fopen("Test-3.txt", "w");
-    if (!f3) {
-        perror("Erreur creation Test-3.txt");
-        free(nombres);
-        return 1;
-    }
-
-    int tailles[] = {3, 6, 9, 12};
-
-    for (int t = 0; t < 4; t++) {
-        int digits = tailles[t];
-
-        int count_t = 0;
-        int essais = 0;
-
-        int max_essais = n * 5;  // Limite pour eviter boucle infinie
-
-        while (count_t < 10 && essais < max_essais) {
-            int val = nombres[rand() % n];
-            if (nb_chiffres(val) == digits) {
-                fprintf(f3, "%d\n", val);
-                count_t++;
-            }
-            essais++;
-        }
-        fprintf(f3, "\n");
-    }
-
-    fclose(f3);
-    printf("Test-3.txt cree.\n");
-
     free(nombres);
 
     return 0;
