@@ -1,0 +1,22 @@
+Taille;Type_Test;Temps_Moyen(s);Temps_Min(s);Temps_Max(s);Complexite_Theorique;Methode
+100;aleatoire;0,000000;0,000000;0,000000;O(n log n);supprimer_min
+100;croissant;0,000100;0,000000;0,001000;O(n log n);supprimer_min
+100;decroissant;0,000000;0,000000;0,000000;O(n log n);supprimer_min
+500;aleatoire;0,000200;0,000000;0,001000;O(n log n);supprimer_min
+500;croissant;0,000000;0,000000;0,000000;O(n log n);supprimer_min
+500;decroissant;0,000000;0,000000;0,000000;O(n log n);supprimer_min
+1000;aleatoire;0,000000;0,000000;0,000000;O(n log n);supprimer_min
+1000;croissant;0,000000;0,000000;0,000000;O(n log n);supprimer_min
+1000;decroissant;0,000100;0,000000;0,001000;O(n log n);supprimer_min
+5000;aleatoire;0,000500;0,000000;0,001000;O(n log n);supprimer_min
+5000;croissant;0,000400;0,000000;0,001000;O(n log n);supprimer_min
+5000;decroissant;0,000300;0,000000;0,001000;O(n log n);supprimer_min
+10000;aleatoire;0,001500;0,001000;0,003000;O(n log n);supprimer_min
+10000;croissant;0,001400;0,001000;0,002000;O(n log n);supprimer_min
+10000;decroissant;0,001600;0,001000;0,002000;O(n log n);supprimer_min
+50000;aleatoire;0,010000;0,008000;0,012000;O(n log n);supprimer_min
+50000;croissant;0,005900;0,005000;0,007000;O(n log n);supprimer_min
+50000;decroissant;0,006300;0,005000;0,008000;O(n log n);supprimer_min
+100000;aleatoire;0,018100;0,017000;0,020000;O(n log n);supprimer_min
+100000;croissant;0,013500;0,013000;0,015000;O(n log n);supprimer_min
+100000;decroissant;0,013900;0,013000;0,015000;O(n log n);supprimer_min

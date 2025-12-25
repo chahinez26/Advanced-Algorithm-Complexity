@@ -27,29 +27,24 @@ int trouver_max(int tab[], int n) {
 void tri_comptage(int tab[], int n, int exp) {
     int* sortie = (int*)malloc(n * sizeof(int));
     int compteur[10] = {0};
-    
     // Compter les occurrences de chaque chiffre
     for (int i = 0; i < n; i++) {
         compteur[(tab[i] / exp) % 10]++;
     }
-    
     // Calculer les positions cumulatives
     for (int i = 1; i < 10; i++) {
         compteur[i] += compteur[i - 1];
     }
-    
     // Construire le tableau de sortie
     for (int i = n - 1; i >= 0; i--) {
         int chiffre = (tab[i] / exp) % 10;
         sortie[compteur[chiffre] - 1] = tab[i];
         compteur[chiffre]--;
     }
-    
     // Copier le tableau de sortie dans le tableau original
     for (int i = 0; i < n; i++) {
         tab[i] = sortie[i];
     }
-    
     free(sortie);
 }
 
@@ -62,7 +57,6 @@ void tri_distribution(int tab[], int n) {
     int max = trouver_max(tab, n);
     
     // Appliquer le tri par comptage pour chaque chiffre
-    // exp = 1 (unités), 10 (dizaines), 100 (centaines), etc.
     for (int exp = 1; max / exp > 0; exp *= 10) {
         tri_comptage(tab, n, exp);
     }

@@ -2,109 +2,109 @@
 #include <stdlib.h>
 #include <time.h>
 
-// ========================================
-// TRI PAR TAS (HEAP SORT)
-// Complexité: O(n log n) dans tous les cas
-// Utilise une structure de tas max
-// ========================================
-
-/**
- * Transforme un sous-arbre en tas max
- * n = taille du tas
- * i = indice de la racine du sous-arbre
- */
-void entasser(int tab[], int n, int i) {
-    int plus_grand = i; // Initialiser le plus grand comme racine
-    int gauche = 2 * i + 1; // Fils gauche
-    int droite = 2 * i + 2; // Fils droit
+void entasser_min(int tab[], int n, int i) {
+    int plus_petit = i;      // Initialiser le plus petit comme racine
+    int gauche = 2 * i + 1;  // Fils gauche
+    int droite = 2 * i + 2;  // Fils droit
     int temp;
     
-    // Si le fils gauche est plus grand que la racine
-    if (gauche < n && tab[gauche] > tab[plus_grand]) {
-        plus_grand = gauche;
+    // Si le fils gauche est plus petit que la racine
+    if (gauche < n && tab[gauche] < tab[plus_petit]) {
+        plus_petit = gauche;
     }
-    
-    // Si le fils droit est plus grand que le plus grand actuel
-    if (droite < n && tab[droite] > tab[plus_grand]) {
-        plus_grand = droite;
+    // Si le fils droit est plus petit que le plus petit actuel
+    if (droite < n && tab[droite] < tab[plus_petit]) {
+        plus_petit = droite;
     }
-    
-    // Si le plus grand n'est pas la racine
-    if (plus_grand != i) {
+    // Si le plus petit n'est pas la racine
+    if (plus_petit != i) {
         // Échanger
         temp = tab[i];
-        tab[i] = tab[plus_grand];
-        tab[plus_grand] = temp;
-        
+        tab[i] = tab[plus_petit];
+        tab[plus_petit] = temp;
         // Entasser récursivement le sous-arbre affecté
-        entasser(tab, n, plus_grand);
+        entasser_min(tab, n, plus_petit);
     }
 }
 
-/**
- * Tri par tas
- * 1. Construire un tas max
- * 2. Extraire les éléments un par un du tas
- */
-void tri_tas(int tab[], int n) {
-    int temp;
+int supprimer_min(int tab[], int *taille_tas) {
+    // Le minimum est à la racine (indice 0)
+    int min = tab[0];
     
-    // Construire le tas max (réorganiser le tableau)
+    // Remplacer la racine par le dernier élément
+    tab[0] = tab[(*taille_tas) - 1];
+    
+    // Réduire la taille du tas
+    (*taille_tas)--;
+    
+    // Réorganiser le tas pour maintenir la propriété de tas minimum
+    entasser_min(tab, *taille_tas, 0);
+    
+    return min;
+}
+
+
+void construire_tas_min(int tab[], int n) {
+    // Commencer par le dernier nœud non-feuille et remonter
     for (int i = n / 2 - 1; i >= 0; i--) {
-        entasser(tab, n, i);
-    }
-    
-    // Extraire les éléments du tas un par un
-    for (int i = n - 1; i > 0; i--) {
-        // Déplacer la racine actuelle (max) à la fin
-        temp = tab[0];
-        tab[0] = tab[i];
-        tab[i] = temp;
-        
-        // Appeler entasser sur le tas réduit
-        entasser(tab, i, 0);
+        entasser_min(tab, n, i);
     }
 }
+void tri_tas_avec_supprimer_min(int tab[], int n) {
+    // Etape 1: Construire le tas minimum
+    construire_tas_min(tab, n);
+    int* tab_trie = (int*)malloc(n * sizeof(int));
+    if (tab_trie == NULL) {
+        printf("Erreur d'allocation mémoire\n");
+        return;
+    }
+    int taille_tas = n;
+    // Étape 2: Extraire tous les éléments avec supprimer_min()
+    for (int i = 0; i < n; i++) {
+        tab_trie[i] = supprimer_min(tab, &taille_tas);
+    }
+    // Étape 3: Copier les éléments triés dans le tableau original
+    for (int i = 0; i < n; i++) {
+        tab[i] = tab_trie[i];
+    }
+    free(tab_trie);
+}
 
-/**
- * Génère un tableau avec des valeurs aléatoires
- */
+
+void afficher_tas(int tab[], int n) {
+    printf("Tas: ");
+    for (int i = 0; i < n; i++) {
+        printf("%d ", tab[i]);
+    }
+    printf("\n");
+}
+
 void generer_aleatoire(int tab[], int n) {
     for (int i = 0; i < n; i++) {
         tab[i] = rand() % 100000;
     }
 }
 
-/**
- * Génère un tableau trié en ordre croissant
- */
+
 void generer_croissant(int tab[], int n) {
     for (int i = 0; i < n; i++) {
         tab[i] = i;
     }
 }
 
-/**
- * Génère un tableau trié en ordre décroissant
- */
+
 void generer_decroissant(int tab[], int n) {
     for (int i = 0; i < n; i++) {
         tab[i] = n - i;
     }
 }
 
-/**
- * Copie un tableau source vers un tableau destination
- */
 void copier_tableau(int source[], int dest[], int n) {
     for (int i = 0; i < n; i++) {
         dest[i] = source[i];
     }
 }
 
-/**
- * Affiche une barre de progression avec couleurs
- */
 void afficher_progression(int actuel, int total, const char* nom_algo) {
     int pourcentage = (actuel * 100) / total;
     int barres_remplies = (pourcentage * 40) / 100;
@@ -137,9 +137,22 @@ void double_to_french_string(double value, char* buffer) {
     }
 }
 
+int verifier_tri(int tab[], int n) {
+    for (int i = 0; i < n - 1; i++) {
+        if (tab[i] > tab[i + 1]) {
+            return 0; // Pas trié
+        }
+    }
+    return 1; // Trié
+}
+
 int main() {
     // Initialisation du générateur aléatoire
     srand(time(NULL));
+    
+    // === TESTS DE PERFORMANCE ===
+    printf("=== TRI PAR TAS AVEC SUPPRIMER_MIN ===\n");
+    printf("Début des tests de performance...\n\n");
     
     // Tailles de tableaux à tester
     int tailles[] = {100, 500, 1000, 5000, 10000, 50000, 100000};
@@ -157,17 +170,14 @@ int main() {
     int test_actuel = 0;
     
     // Ouverture du fichier CSV
-    FILE* fichier = fopen("resultats_tri_tas.csv", "w");
+    FILE* fichier = fopen("resultats_tri_tas_min.csv", "w");
     if (fichier == NULL) {
         printf("Erreur: impossible de créer le fichier CSV\n");
         return 1;
     }
     
     // Écriture de l'en-tête du CSV
-    fprintf(fichier, "Taille;Type_Test;Temps_Moyen(s);Temps_Min(s);Temps_Max(s);Complexite_Theorique\n");
-    
-    printf("=== TRI PAR TAS (HEAP SORT) ===\n");
-    printf("Début des tests...\n\n");
+    fprintf(fichier, "Taille;Type_Test;Temps_Moyen(s);Temps_Min(s);Temps_Max(s);Complexite_Theorique;Methode\n");
     
     // Boucle sur les tailles
     for (int t = 0; t < nb_tailles; t++) {
@@ -199,7 +209,7 @@ int main() {
                 
                 // Mesure du temps
                 clock_t debut = clock();
-                tri_tas(tab_test, taille);
+                tri_tas_avec_supprimer_min(tab_test, taille);
                 clock_t fin = clock();
                 
                 double temps = (double)(fin - debut) / CLOCKS_PER_SEC;
@@ -208,8 +218,14 @@ int main() {
                 if (temps < temps_min) temps_min = temps;
                 if (temps > temps_max) temps_max = temps;
                 
+                // Vérifier que le tri est correct
+                if (!verifier_tri(tab_test, taille)) {
+                    printf("\nERREUR: Le tableau n'est pas trié correctement!\n");
+                    return 1;
+                }
+                
                 test_actuel++;
-                afficher_progression(test_actuel, total_tests, "Tri par Tas");
+                afficher_progression(test_actuel, total_tests, "Tri Tas (supprimer_min)");
             }
             
             // Calcul de la moyenne
@@ -218,7 +234,7 @@ int main() {
             double_to_french_string(temps_moyen, str_moyen);
             double_to_french_string(temps_min, str_min);
             double_to_french_string(temps_max, str_max);
-            fprintf(fichier, "%d;%s;%s;%s;%s;O(n log n)\n", 
+            fprintf(fichier, "%d;%s;%s;%s;%s;O(n log n);supprimer_min\n", 
                     taille, types[type], str_moyen, str_min, str_max);
             fflush(fichier);
         }
@@ -232,7 +248,8 @@ int main() {
     fclose(fichier);
     
     printf("\n\n=== TESTS TERMINÉS ===\n");
-    printf("Résultats enregistrés dans: resultats_tri_tas.csv\n");
+    printf("Résultats enregistrés dans: resultats_tri_tas_min.csv\n");
+    printf("\nVérification: Tous les tableaux triés sont corrects ✓\n");
     
     return 0;
 }

@@ -25,6 +25,7 @@ void tri_bulles(int tab[], int n) {
     }
 }
 
+
 /**
  * Genère un tableau avec des valeurs aleatoires
  */
